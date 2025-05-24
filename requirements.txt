@@ -1,6 +1,6 @@
-streamlit==1.24.0
+streamlit
 tensorflow==2.16.2
-pandas==2.0.3
-numpy==1.26.0
-joblib
-openpyxl==3.1.2
+pandas
+numpy
+joblib==1.3.2
+openpyxl
