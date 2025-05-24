@@ -11,13 +11,9 @@ st.set_page_config(
 )
 
 # Load model
-# model_311 = tf.keras.models.load_model('Data/model/model_311.h5')
-# model_303 = tf.keras.models.load_model('Data/model/model_303.h5')
-# model_349 = tf.keras.models.load_model('Data/model/model_349.h5')
 model_311 = tf.keras.models.load_model('Data/model/model_311.h5', custom_objects={'mse': tf.keras.losses.mse})
 model_303 = tf.keras.models.load_model('Data/model/model_303.h5', custom_objects={'mse': tf.keras.losses.mse})
 model_349 = tf.keras.models.load_model('Data/model/model_349.h5', custom_objects={'mse': tf.keras.losses.mse})
-
 
 # Load data
 data_311 = pd.read_excel("Data/data/data_311.xlsx")
@@ -43,18 +39,21 @@ def pilih_topografi():
         data = data_311
         scaler_x = scaler_x_311
         scaler_y = scaler_y_311
+        zona = '311'
     elif dropdown == 'Dataran Rendah':
         model = model_303
         data = data_303
         scaler_x = scaler_x_303
         scaler_y = scaler_y_303
+        zona = '303'
     elif dropdown == 'Pesisir':
         model = model_349
         data = data_349
         scaler_x = scaler_x_349
         scaler_y = scaler_y_349
+        zona = '349'
     st.write(f'Jenis topografi **{dropdown}** telah dipilih.')
-    return model, data, scaler_x, scaler_y, dropdown
+    return model, data, scaler_x, scaler_y, zona
 
 def pilih_musim():
     musim = st.selectbox(
@@ -71,14 +70,18 @@ def buat_sequence(data_x, look_back=36):
     return np.array(X_seq)
 
 def prediksi_recursive(model, scaler_y, X_test_seq, n_future=36):
-    recursive_input = X_test_seq[-1].copy()
+    recursive_input = X_test_seq[-1].copy()  # shape (look_back, fitur)
     predictions = []
     for _ in range(n_future):
         input_reshaped = recursive_input.reshape(1, recursive_input.shape[0], recursive_input.shape[1])
         next_pred = model.predict(input_reshaped, verbose=0)
         predictions.append(next_pred[0, 0])
-        # Update recursive_input: geser 1 langkah, tambahkan prediksi sebagai fitur RR, pertahankan fitur lain (misal fitur kedua)
-        recursive_input = np.append(recursive_input[1:], [[next_pred[0, 0], recursive_input[-1, 1]]], axis=0)
+        # Update recursive_input:
+        # Geser 1 langkah ke depan, tambahkan prediksi baru sebagai fitur RR (kolom 0)
+        # Pertahankan fitur lain (kolom 1 dan seterusnya) dari baris terakhir
+        last_features = recursive_input[-1, 1:]
+        new_row = np.concatenate(([next_pred[0, 0]], last_features))
+        recursive_input = np.vstack((recursive_input[1:], new_row))
     pred_array = np.array(predictions).reshape(-1, 1)
     pred_array_rescaled = scaler_y.inverse_transform(pred_array)
     return pred_array_rescaled
@@ -184,8 +187,6 @@ def main():
     look_back = 36
 
     # Siapkan data input fitur untuk prediksi
-    # Misal data fitur di kolom 1 ke seterusnya (asumsi sesuai data), 
-    # scaling sudah ada, ini contoh buat sequence input
     X_all = data.iloc[:, 1:].values
     X_scaled = scaler_x.transform(X_all)
 
