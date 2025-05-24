@@ -187,7 +187,7 @@ def main():
     look_back = 36
 
     # Siapkan data input fitur untuk prediksi
-    X_all = data.iloc[:, 1:].values
+    X_all = X_all = data[['TAVG', 'FF_AVG']]  # contoh saja, ganti sesuai fitur yang benar
     X_scaled = scaler_x.transform(X_all)
 
     X_test_seq = buat_sequence(X_scaled, look_back=look_back)
