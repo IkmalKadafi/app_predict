@@ -39,21 +39,18 @@ def pilih_topografi():
         data = data_311
         scaler_x = scaler_x_311
         scaler_y = scaler_y_311
-        zona = '311'
     elif dropdown == 'Dataran Rendah':
         model = model_303
         data = data_303
         scaler_x = scaler_x_303
         scaler_y = scaler_y_303
-        zona = '303'
     elif dropdown == 'Pesisir':
         model = model_349
         data = data_349
         scaler_x = scaler_x_349
         scaler_y = scaler_y_349
-        zona = '349'
     st.write(f'Jenis topografi **{dropdown}** telah dipilih.')
-    return model, data, scaler_x, scaler_y, zona
+    return model, data, scaler_x, scaler_y, dropdown
 
 def pilih_musim():
     musim = st.selectbox(
@@ -70,18 +67,14 @@ def buat_sequence(data_x, look_back=36):
     return np.array(X_seq)
 
 def prediksi_recursive(model, scaler_y, X_test_seq, n_future=36):
-    recursive_input = X_test_seq[-1].copy()  # shape (look_back, fitur)
+    recursive_input = X_test_seq[-1].copy()
     predictions = []
     for _ in range(n_future):
         input_reshaped = recursive_input.reshape(1, recursive_input.shape[0], recursive_input.shape[1])
         next_pred = model.predict(input_reshaped, verbose=0)
         predictions.append(next_pred[0, 0])
-        # Update recursive_input:
-        # Geser 1 langkah ke depan, tambahkan prediksi baru sebagai fitur RR (kolom 0)
-        # Pertahankan fitur lain (kolom 1 dan seterusnya) dari baris terakhir
-        last_features = recursive_input[-1, 1:]
-        new_row = np.concatenate(([next_pred[0, 0]], last_features))
-        recursive_input = np.vstack((recursive_input[1:], new_row))
+        # Update recursive_input: geser 1 langkah, tambahkan prediksi sebagai fitur RR, pertahankan fitur lain (misal fitur kedua)
+        recursive_input = np.append(recursive_input[1:], [[next_pred[0, 0], recursive_input[-1, 1]]], axis=0)
     pred_array = np.array(predictions).reshape(-1, 1)
     pred_array_rescaled = scaler_y.inverse_transform(pred_array)
     return pred_array_rescaled
@@ -188,61 +181,13 @@ def main():
 
     # Siapkan data input fitur untuk prediksi
     X_all = data.iloc[:, 1:].values
-    X_scaled = scaler_x.transform(X_all)
 
-    X_test_seq = buat_sequence(X_scaled, look_back=look_back)
+    # Debug info jumlah fitur input vs scaler
+    st.write(f"Jumlah fitur data input sebelum transform: {X_all.shape[1]}")
+    st.write(f"Jumlah fitur yang diharapkan scaler_x: {scaler_x.scale_.shape[0]}")
 
-    # Prediksi recursive
-    pred_array_rescaled = prediksi_recursive(model, scaler_y, X_test_seq, n_future=36)
-
-    # Tampilkan hasil prediksi per dasarian
-    st.subheader("Hasil Prediksi Curah Hujan (mm) 36 Dasarian ke Depan:")
-    for i, val in enumerate(pred_array_rescaled):
-        st.write(f"Prediksi ke-{i+1}: {val[0]:.2f} mm")
-
-    # Tanggal mulai prediksi diasumsikan
-    start_date = pd.to_datetime("2024-10-01")
-
-    # Deteksi musim dari hasil prediksi
-    result = detect_seasons(pred_array_rescaled, start_date)
-
-    st.subheader("Hasil Deteksi Musim:")
-    if musim == "Musim Hujan":
-        st.write("=== MUSIM HUJAN ===")
-        st.write(f"Awal     : {result['musim_hujan']['awal']}")
-        st.write(f"Puncak   : {result['musim_hujan']['puncak']}")
-        st.write(f"Durasi   : {result['musim_hujan']['durasi (dasarian)']} dasarian\n")
-    else:
-        st.write("=== MUSIM KEMARAU ===")
-        st.write(f"Awal     : {result['musim_kemarau']['awal']}")
-        st.write(f"Puncak   : {result['musim_kemarau']['puncak']}")
-        st.write(f"Durasi   : {result['musim_kemarau']['durasi (dasarian)']} dasarian\n")
-
-    # Data normal musim untuk perbandingan
-    normal_musim = {
-        'musim_hujan': {
-            '303': {'awal': 'November III', 'akhir': 'April III', 'durasi': 16},
-            '311': {'awal': 'November I', 'akhir': 'April III', 'durasi': 18},
-            '349': {'awal': 'November II', 'akhir': 'Mei I', 'durasi': 18},
-        },
-        'musim_kemarau': {
-            '303': {'awal': 'April III', 'akhir': 'November II', 'durasi': 21},
-            '311': {'awal': 'April III', 'akhir': 'Oktober III', 'durasi': 19},
-            '349': {'awal': 'Mei I', 'akhir': 'November I', 'durasi': 19},
-        }
-    }
-
-    st.subheader(f"Data Normal Musim Zona {zona}")
-    if musim == "Musim Hujan":
-        st.write("Musim Hujan:")
-        st.write(f"Awal Normal  : {normal_musim['musim_hujan'][zona]['awal']}")
-        st.write(f"Akhir Normal : {normal_musim['musim_hujan'][zona]['akhir']}")
-        st.write(f"Durasi       : {normal_musim['musim_hujan'][zona]['durasi']} dasarian\n")
-    else:
-        st.write("Musim Kemarau:")
-        st.write(f"Awal Normal  : {normal_musim['musim_kemarau'][zona]['awal']}")
-        st.write(f"Akhir Normal : {normal_musim['musim_kemarau'][zona]['akhir']}")
-        st.write(f"Durasi       : {normal_musim['musim_kemarau'][zona]['durasi']} dasarian\n")
-
-if __name__ == "__main__":
-    main()
+    # Sesuaikan jumlah fitur input dengan scaler_x
+    expected_features = scaler_x.scale_.shape[0]
+    if X_all.shape[1] > expected_features:
+        X_all = X_all[:, :expected_features]
+        st.write(f"Jumlah fitur input disesuaikan menjadi: {X_all.shape
