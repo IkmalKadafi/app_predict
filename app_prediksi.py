@@ -343,14 +343,14 @@ def main():
 
         normal_musim = {
             'musim_hujan': {
-                'Dataran Rendah': {'awal': 'November III', 'akhir': 'April III', 'durasi': 16},
-                'Dataran Tinggi': {'awal': 'November I', 'akhir': 'April III', 'durasi': 18},
-                'Pesisir': {'awal': 'November II', 'akhir': 'Mei I', 'durasi': 18},
+                '303 (Dataran Rendah)': {'awal': 'November III', 'akhir': 'April III', 'durasi': 16},
+                '311 (Dataran Tinggi)': {'awal': 'November I', 'akhir': 'April III', 'durasi': 18},
+                '349 (Pesisir)': {'awal': 'November II', 'akhir': 'Mei I', 'durasi': 18},
             },
             'musim_kemarau': {
-                'Dataran Rendah': {'awal': 'April III', 'akhir': 'November II', 'durasi': 21},
-                'Dataran Tinggi': {'awal': 'April III', 'akhir': 'Oktober III', 'durasi': 19},
-                'Pesisir': {'awal': 'Mei I', 'akhir': 'November I', 'durasi': 19},
+                '303 (Dataran Rendah)': {'awal': 'April III', 'akhir': 'November II', 'durasi': 21},
+                '311 (Dataran Tinggi)': {'awal': 'April III', 'akhir': 'Oktober III', 'durasi': 19},
+                '349 (Pesisir)': {'awal': 'Mei I', 'akhir': 'November I', 'durasi': 19},
             }
         }
 
