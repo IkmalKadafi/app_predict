@@ -283,6 +283,7 @@ def main():
 
     model, data, scaler_x, scaler_y, zona = pilih_topografi()
     musim = pilih_musim()
+    set_background_and_style(musim)
     start_date = pd.to_datetime("2024-10-01")
     look_back = 36
 
