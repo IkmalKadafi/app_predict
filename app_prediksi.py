@@ -232,17 +232,49 @@ def main():
         }
     }
 
-    st.subheader(f"Data Normal Musim Zona {zona}")
+        # Tampilkan tabel data normal musim untuk perbandingan
+    st.subheader("Tabel Data Normal Musim (Semua Zona)")
+
     if musim == "Musim Hujan":
-        st.write("Musim Hujan:")
-        st.write(f"Awal Normal  : {normal_musim['musim_hujan'][zona]['awal']}")
-        st.write(f"Akhir Normal : {normal_musim['musim_hujan'][zona]['akhir']}")
-        st.write(f"Durasi       : {normal_musim['musim_hujan'][zona]['durasi']} dasarian\n")
+        df_normal = pd.DataFrame.from_dict({
+            'Zona': ['303', '311', '349'],
+            'Awal Musim Hujan': [
+                normal_musim['musim_hujan']['303']['awal'],
+                normal_musim['musim_hujan']['311']['awal'],
+                normal_musim['musim_hujan']['349']['awal']
+            ],
+            'Akhir Musim Hujan': [
+                normal_musim['musim_hujan']['303']['akhir'],
+                normal_musim['musim_hujan']['311']['akhir'],
+                normal_musim['musim_hujan']['349']['akhir']
+            ],
+            'Durasi (Dasarian)': [
+                normal_musim['musim_hujan']['303']['durasi'],
+                normal_musim['musim_hujan']['311']['durasi'],
+                normal_musim['musim_hujan']['349']['durasi']
+            ]
+        })
     else:
-        st.write("Musim Kemarau:")
-        st.write(f"Awal Normal  : {normal_musim['musim_kemarau'][zona]['awal']}")
-        st.write(f"Akhir Normal : {normal_musim['musim_kemarau'][zona]['akhir']}")
-        st.write(f"Durasi       : {normal_musim['musim_kemarau'][zona]['durasi']} dasarian\n")
+        df_normal = pd.DataFrame.from_dict({
+            'Zona': ['303', '311', '349'],
+            'Awal Musim Kemarau': [
+                normal_musim['musim_kemarau']['303']['awal'],
+                normal_musim['musim_kemarau']['311']['awal'],
+                normal_musim['musim_kemarau']['349']['awal']
+            ],
+            'Akhir Musim Kemarau': [
+                normal_musim['musim_kemarau']['303']['akhir'],
+                normal_musim['musim_kemarau']['311']['akhir'],
+                normal_musim['musim_kemarau']['349']['akhir']
+            ],
+            'Durasi (Dasarian)': [
+                normal_musim['musim_kemarau']['303']['durasi'],
+                normal_musim['musim_kemarau']['311']['durasi'],
+                normal_musim['musim_kemarau']['349']['durasi']
+            ]
+        })
+
+    st.table(df_normal)
 
 if __name__ == "__main__":
     main()
