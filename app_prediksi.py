@@ -377,7 +377,7 @@ def main():
             })
             st.subheader("Data Normal Musim Kemarau untuk Semua Zona")
         
-        st.table(df_normal, index=False)
+        st.table(df_normal, hide_index=True)
 
 
     # Tabel Normal Musim hanya tampil jika tombol BELUM ditekan
@@ -392,7 +392,7 @@ def main():
             "Akhir Kemarau": ["November II", "Oktober III", "November I"],
             "Durasi Kemarau": [21, 19, 19]
         })
-        st.table(normal_df, index=False)
+        st.table(normal_df, hide_index=True)
 
 if __name__ == "__main__":
     main()
