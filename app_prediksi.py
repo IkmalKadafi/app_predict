@@ -183,19 +183,18 @@ def detect_seasons(pred_array_rescaled, start_date, days_per_dasarian=10):
 
 def set_background_and_style(musim):
     if musim == "Musim Kemarau":
-        # Gambar background untuk kemarau (earth tone)
         background_url = "Data/bg/kemarau.jpg"
-        button_color = "#A0522D"  # warna earth tone coklat
-        dropdown_color = "#DEB887"
-    else:  # Musim Hujan
-        # Gambar background untuk hujan (biru)
+        button_color = "#A0522D"
+        dropdown_bg = "#DEB887"
+        dropdown_text = "#000000"
+    else:
         background_url = "Data/bg/hujan.jpg"
-        button_color = "#1E90FF"  # warna biru
-        dropdown_color = "#87CEFA"
+        button_color = "#1E90FF"
+        dropdown_bg = "#87CEFA"
+        dropdown_text = "#000000"
 
     css = f"""
     <style>
-    /* Background */
     .stApp {{
         background-image: url('{background_url}');
         background-size: cover;
@@ -204,7 +203,6 @@ def set_background_and_style(musim):
         background-position: center;
     }}
 
-    /* Style tombol */
     button.css-1emrehy.edgvbvh3 {{
         background-color: {button_color} !important;
         color: white !important;
@@ -214,11 +212,11 @@ def set_background_and_style(musim):
         padding: 0.5em 1.5em !important;
         transition: background-color 0.3s ease !important;
     }}
+
     button.css-1emrehy.edgvbvh3:hover {{
         background-color: #33333388 !important;
     }}
 
-    /* Style container dropdown (terdekat) */
     div.css-1wy0on6 {{
         background-color: {dropdown_bg} !important;
         color: {dropdown_text} !important;
@@ -226,11 +224,9 @@ def set_background_and_style(musim):
         padding: 0.3em 0.5em !important;
     }}
 
-    /* Untuk teks dropdown */
     div.css-1uccc91-singleValue {{
         color: {dropdown_text} !important;
     }}
-
     </style>
     """
 
