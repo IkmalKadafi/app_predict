@@ -185,14 +185,14 @@ def set_background_and_style():
     # Define a single, consistent color palette
     background_color = "#FFFBDE"  # A light, neutral background
     primary_color = "#90D1CA"     # A nice blue for primary elements (buttons, borders)
-    secondary_color = "#096B68"   # White for dropdown backgrounds, card backgrounds
+    secondary_color = "#096B68"   # Dark teal (used for dropdown backgrounds based on your CSS)
     text_color_header = "#096B68" # Dark gray for headers
     text_color_general = "#096B68" # Slightly lighter gray for general text
     dropdown_text_color = "#129990" # Dark gray for dropdown text
 
     # New colors for table
-    table_header_bg_color = "#129990"  # Light gray for table header background
-    table_cell_bg_color = "#90D1CA"    # Very light gray/off-white for table cell background
+    table_header_bg_color = "#7AE2CF"  # Light gray for table header background
+    table_cell_bg_color = "#FFFBDE"    # Very light gray/off-white for table cell background
     table_border_color = "#90D1CA"     # Medium gray for table borders
 
     css = f"""
@@ -212,6 +212,19 @@ def set_background_and_style():
         font-weight: bold;
     }}
 
+    /* Styling untuk Label Widget (Tambahan Baru) */
+    div[data-testid="stSelectbox"] label,
+    div[data-testid="stTextInput"] label,
+    div[data-testid="stTextArea"] label,
+    div[data-testid="stRadio"] label,
+    div[data-testid="stDateInput"] label,
+    div[data-testid="stTimeInput"] label,
+    div[data-testid="stFileUploader"] label,
+    div[data-testid="stMultiSelect"] label,
+    div[data-testid="stSlider"] label {{
+        color: {text_color_general} !important;
+    }}
+
     /* Tombol */
     div[data-testid="stButton"] > button {{
         background-color: {primary_color} !important;
@@ -224,7 +237,7 @@ def set_background_and_style():
     }}
 
     div[data-testid="stButton"] > button:hover {{
-        background-color: {secondary_color} !important; /* White background on hover */
+        background-color: {secondary_color} !important; /* Menggunakan secondary_color untuk hover button background */
         color: {primary_color} !important; /* Primary color for text on hover */
         border: 1px solid {primary_color} !important;
         transform: scale(1.03);
@@ -236,20 +249,23 @@ def set_background_and_style():
 
     /* Dropdown (Selectbox) */
     div[data-testid="stSelectbox"] > div {{
-        background-color: {secondary_color} !important; /* White background for dropdown */
+        background-color: {secondary_color} !important; /* Background untuk dropdown box */
         border-radius: 6px !important;
         border: 1px solid {primary_color} !important; /* Primary color border */
     }}
 
-    div[data-testid="stSelectbox"] .st-bq, /* Text inside the selected option box */
-    div[data-testid="stSelectbox"] div[data-baseweb="select"] > div:first-child > div {{ /* Arrow icon and text */
+    /* Teks di dalam kotak opsi yang dipilih dan ikon panah pada Selectbox */
+    div[data-testid="stSelectbox"] .st-bb, /* Selector untuk teks dalam kotak (mungkin perlu disesuaikan) */
+    div[data-testid="stSelectbox"] .st-cq, /* Selector lain yang mungkin untuk teks dalam kotak */
+    div[data-testid="stSelectbox"] div[data-baseweb="select"] > div:first-child > div, /* Teks dan ikon panah */
+    div[data-testid="stSelectbox"] div[data-baseweb="select"] input {{ /* Fallback untuk teks di dalam input (jika berlaku) */
         color: {dropdown_text_color} !important;
     }}
     
     /* Dropdown options list */
     div[data-baseweb="popover"] ul li {{
-        background-color: {secondary_color} !important; /* White background for options */
-        color: {dropdown_text_color} !important; /* Text color for options */
+        background-color: {secondary_color} !important; /* Background untuk opsi */
+        color: {dropdown_text_color} !important; /* Warna teks untuk opsi */
     }}
     div[data-baseweb="popover"] ul li:hover {{
         background-color: {primary_color} !important; /* Primary color background on hover */
