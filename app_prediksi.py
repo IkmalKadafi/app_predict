@@ -181,35 +181,25 @@ def detect_seasons(pred_array_rescaled, start_date, days_per_dasarian=10):
     }
     return result
 
-def set_background_and_style(musim): # Tambah parameter opasitas
-    base_raw_url = f"https://raw.githubusercontent.com/IkmalKadafi/app_predict/main/"
+def set_background_and_style():
+    # Define a single, consistent color palette
+    background_color = "#F1BA88"  # A light, neutral background
+    primary_color = "#81E7AF"     # A nice blue for primary elements (buttons, borders)
+    secondary_color = "#E9F5BE"   # White for dropdown backgrounds, card backgrounds
+    text_color_header = "#A76545" # Dark gray for headers
+    text_color_general = "#03A791" # Slightly lighter gray for general text
+    dropdown_text_color = "#03A791" # Dark gray for dropdown text
 
-    if musim == "Musim Kemarau":
-        background_url = f"{base_raw_url}Data/bg/kemarau.jpg"
-        button_color = "#A0522D"  # Sienna
-        dropdown_bg = "#DEB887"   # BurlyWood
-        dropdown_text = "#594100" # Black
-        text_color_header = "#8B4513" # SaddleBrown (lebih gelap dari tombol)
-        text_color_general = "#594100" # DarkSlateGray (untuk kontras di background terang)
-        table_border_color = "#A0522D" # Warna border tabel disamakan dengan tombol
-    else:  # Asumsi Musim Hujan
-        background_url = f"{base_raw_url}Data/bg/hujan.jpg"
-        button_color = "#1E90FF"  # DodgerBlue
-        dropdown_bg = "#87CEFA"   # LightSkyBlue
-        dropdown_text = "#7AE2CF" # Black
-        text_color_header = "#0000CD" # MediumBlue (lebih gelap dari tombol)
-        text_color_general = "#F0F8FF" # AliceBlue (putih kebiruan untuk kontras di background gelap)
-        table_border_color = "#1E90FF" # Warna border tabel disamakan dengan tombol
+    # New colors for table
+    table_header_bg_color = "#E0E0E0"  # Light gray for table header background
+    table_cell_bg_color = "#FAFAFA"    # Very light gray/off-white for table cell background
+    table_border_color = "#CCCCCC"     # Medium gray for table borders
 
     css = f"""
     <style>
     /* Targetkan kontainer utama aplikasi Streamlit */
     [data-testid="stAppViewContainer"], [data-testid="stDecoration"] {{
-        background-image: url('{background_url}');
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-        background-position: center;
+        background-color: {background_color} !important; /* Solid background color */
     }}
 
     /* Styling umum untuk teks */
@@ -224,19 +214,19 @@ def set_background_and_style(musim): # Tambah parameter opasitas
 
     /* Tombol */
     div[data-testid="stButton"] > button {{
-        background-color: {button_color} !important;
+        background-color: {primary_color} !important;
         color: white !important;
         font-weight: bold !important;
         border-radius: 8px !important;
-        border: 1px solid {button_color} !important;
+        border: 1px solid {primary_color} !important;
         padding: 0.6em 1.5em !important;
         transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease !important;
     }}
 
     div[data-testid="stButton"] > button:hover {{
-        background-color: #FFFFFF !important;
-        color: {button_color} !important;
-        border: 1px solid {button_color} !important;
+        background-color: {secondary_color} !important; /* White background on hover */
+        color: {primary_color} !important; /* Primary color for text on hover */
+        border: 1px solid {primary_color} !important;
         transform: scale(1.03);
     }}
 
@@ -246,46 +236,52 @@ def set_background_and_style(musim): # Tambah parameter opasitas
 
     /* Dropdown (Selectbox) */
     div[data-testid="stSelectbox"] > div {{
-        background-color: {dropdown_bg} !important;
+        background-color: {secondary_color} !important; /* White background for dropdown */
         border-radius: 6px !important;
-        border: 1px solid {button_color} !important;
+        border: 1px solid {primary_color} !important; /* Primary color border */
     }}
 
-    div[data-testid="stSelectbox"] .st-bq,
-    div[data-testid="stSelectbox"] div[data-baseweb="select"] > div:first-child > div {{
-        color: {dropdown_text} !important;
+    div[data-testid="stSelectbox"] .st-bq, /* Text inside the selected option box */
+    div[data-testid="stSelectbox"] div[data-baseweb="select"] > div:first-child > div {{ /* Arrow icon and text */
+        color: {dropdown_text_color} !important;
     }}
     
+    /* Dropdown options list */
     div[data-baseweb="popover"] ul li {{
-        background-color: {dropdown_bg} !important;
-        color: {dropdown_text} !important;
+        background-color: {secondary_color} !important; /* White background for options */
+        color: {dropdown_text_color} !important; /* Text color for options */
     }}
     div[data-baseweb="popover"] ul li:hover {{
-        background-color: {button_color} !important;
-        color: white !important;
+        background-color: {primary_color} !important; /* Primary color background on hover */
+        color: white !important; /* White text on hover */
     }}
 
     /* Header default Streamlit */
     [data-testid="stHeader"] {{
-        background-color: rgba(0,0,0,0) !important;
+        background-color: rgba(0,0,0,0) !important; /* Transparent header */
     }}
 
     /* --- STYLING TABEL --- */
     [data-testid="stTable"] table {{
         width: 100%; /* Membuat tabel responsif */
         border-collapse: collapse; /* Menghilangkan spasi antar border */
+        background-color: {table_cell_bg_color} !important; /* Background color for the entire table body */
     }}
 
     [data-testid="stTable"] table th, /* Header tabel */
     [data-testid="stTable"] table td {{ /* Sel data tabel */
         color: {text_color_general} !important; /* Menggunakan warna teks umum */
-        border: 1px solid {table_border_color} !important; /* Menambahkan border dengan warna dinamis */
+        border: 1px solid {table_border_color} !important; /* Menambahkan border dengan warna tabel */
         padding: 8px !important; /* Menambahkan padding pada sel */
         text-align: left !important; /* Mengatur perataan teks */
     }}
 
+    [data-testid="stTable"] table td {{ /* Styling spesifik untuk sel data tabel */
+        background-color: {table_cell_bg_color} !important; /* Warna background sel data tabel */
+    }}
+
     [data-testid="stTable"] table th {{ /* Styling spesifik untuk header tabel */
-        background-color: {dropdown_bg} !important; /* Warna background header disamakan dengan dropdown */
+        background-color: {table_header_bg_color} !important; /* Warna background header tabel */
         color: {text_color_header} !important; /* Warna teks header tabel */
         font-weight: bold;
     }}
@@ -381,7 +377,7 @@ def main():
             })
             st.subheader("Data Normal Musim Kemarau untuk Semua Zona")
         
-        st.table(df_normal)
+        st.table(df_normal, index=False)
 
 
     # Tabel Normal Musim hanya tampil jika tombol BELUM ditekan
@@ -396,7 +392,7 @@ def main():
             "Akhir Kemarau": ["November II", "Oktober III", "November I"],
             "Durasi Kemarau": [21, 19, 19]
         })
-        st.table(normal_df)
+        st.table(normal_df, index=False)
 
 if __name__ == "__main__":
     main()
