@@ -220,25 +220,27 @@ def main():
         }
 
         # Tampilkan data normal musim sesuai zona dan musim yang dipilih
+        # Tampilkan data normal musim untuk SEMUA zona, tergantung musim yang dipilih
         if musim == "Musim Hujan":
-        df_normal = pd.DataFrame.from_dict({
-            'Zona': ['303', '311', '349'],
-            'Awal Musim Hujan': [
-                normal_musim['musim_hujan']['303']['awal'],
-                normal_musim['musim_hujan']['311']['awal'],
-                normal_musim['musim_hujan']['349']['awal']
-            ],
-            'Akhir Musim Hujan': [
-                normal_musim['musim_hujan']['303']['akhir'],
-                normal_musim['musim_hujan']['311']['akhir'],
-                normal_musim['musim_hujan']['349']['akhir']
-            ],
-            'Durasi (Dasarian)': [
-                normal_musim['musim_hujan']['303']['durasi'],
-                normal_musim['musim_hujan']['311']['durasi'],
-                normal_musim['musim_hujan']['349']['durasi']
-            ]
-        })
+            df_normal = pd.DataFrame.from_dict({
+                'Zona': ['303', '311', '349'],
+                'Awal Musim Hujan': [
+                    normal_musim['musim_hujan']['303']['awal'],
+                    normal_musim['musim_hujan']['311']['awal'],
+                    normal_musim['musim_hujan']['349']['awal']
+                ],
+                'Akhir Musim Hujan': [
+                    normal_musim['musim_hujan']['303']['akhir'],
+                    normal_musim['musim_hujan']['311']['akhir'],
+                    normal_musim['musim_hujan']['349']['akhir']
+                ],
+                'Durasi (Dasarian)': [
+                    normal_musim['musim_hujan']['303']['durasi'],
+                    normal_musim['musim_hujan']['311']['durasi'],
+                    normal_musim['musim_hujan']['349']['durasi']
+                ]
+            })
+            st.subheader("Data Normal Musim Hujan untuk Semua Zona")
         else:
             df_normal = pd.DataFrame.from_dict({
                 'Zona': ['303', '311', '349'],
@@ -258,11 +260,10 @@ def main():
                     normal_musim['musim_kemarau']['349']['durasi']
                 ]
             })
-            st.table(df_normal)
+            st.subheader("Data Normal Musim Kemarau untuk Semua Zona")
+        
+        st.table(df_normal)
 
-    # Inisialisasi state jika belum ada
-    if "prediksi_ditekan" not in st.session_state:
-        st.session_state["prediksi_ditekan"] = False
 
     # Tabel Normal Musim hanya tampil jika tombol BELUM ditekan
     if not st.session_state["prediksi_ditekan"]:
