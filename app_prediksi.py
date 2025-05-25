@@ -29,6 +29,7 @@ scaler_y_311 = joblib.load('Data/scaler/scaler_y_311.pkl')
 scaler_y_303 = joblib.load('Data/scaler/scaler_y_303.pkl')
 scaler_y_349 = joblib.load('Data/scaler/scaler_y_349.pkl')
 
+
 def pilih_topografi():
     dropdown = st.selectbox(
         "Pilih Topografi yang diinginkan:",
@@ -55,6 +56,7 @@ def pilih_topografi():
     st.write(f'Jenis topografi **{dropdown}** telah dipilih.')
     return model, data, scaler_x, scaler_y, zona
 
+
 def pilih_musim():
     musim = st.selectbox(
         "Pilih Musim yang Ingin Diprediksi:",
@@ -63,28 +65,28 @@ def pilih_musim():
     st.write(f"Musim yang dipilih: **{musim}**")
     return musim
 
+
 def buat_sequence(data_x, look_back=36):
     X_seq = []
     for i in range(len(data_x) - look_back):
         X_seq.append(data_x[i:i+look_back])
     return np.array(X_seq)
 
+
 def prediksi_recursive(model, scaler_y, X_test_seq, n_future=36):
-    recursive_input = X_test_seq[-1].copy()  # shape (look_back, fitur)
+    recursive_input = X_test_seq[-1].copy()
     predictions = []
     for _ in range(n_future):
         input_reshaped = recursive_input.reshape(1, recursive_input.shape[0], recursive_input.shape[1])
         next_pred = model.predict(input_reshaped, verbose=0)
         predictions.append(next_pred[0, 0])
-        # Update recursive_input:
-        # Geser 1 langkah ke depan, tambahkan prediksi baru sebagai fitur RR (kolom 0)
-        # Pertahankan fitur lain (kolom 1 dan seterusnya) dari baris terakhir
         last_features = recursive_input[-1, 1:]
         new_row = np.concatenate(([next_pred[0, 0]], last_features))
         recursive_input = np.vstack((recursive_input[1:], new_row))
     pred_array = np.array(predictions).reshape(-1, 1)
     pred_array_rescaled = scaler_y.inverse_transform(pred_array)
     return pred_array_rescaled
+
 
 def detect_seasons(pred_array_rescaled, start_date, days_per_dasarian=10):
     n = len(pred_array_rescaled)
@@ -96,7 +98,6 @@ def detect_seasons(pred_array_rescaled, start_date, days_per_dasarian=10):
     })
     df['Bulan'] = df['Tanggal'].dt.month
 
-    # Awal musim hujan
     awal_hujan = None
     for i in range(n - 2):
         window = pred_array_rescaled[i:i+3].flatten()
@@ -104,7 +105,6 @@ def detect_seasons(pred_array_rescaled, start_date, days_per_dasarian=10):
             awal_hujan = i
             break
 
-    # Puncak musim hujan
     puncak_hujan_idx = None
     max_total = -np.inf
     for i in range(n - 2):
@@ -117,7 +117,6 @@ def detect_seasons(pred_array_rescaled, start_date, days_per_dasarian=10):
     bulan_window_hujan = df['Bulan'][puncak_hujan_idx:puncak_hujan_idx+3]
     bulan_dominan_hujan = bulan_window_hujan.mode().iloc[0]
 
-    # Awal musim kemarau
     awal_kemarau = None
     if awal_hujan is not None:
         for i in range(awal_hujan + 3, n - 2):
@@ -126,7 +125,6 @@ def detect_seasons(pred_array_rescaled, start_date, days_per_dasarian=10):
                 awal_kemarau = i
                 break
 
-    # Puncak musim kemarau
     puncak_kemarau_idx = None
     min_total = np.inf
     for i in range(n - 2):
@@ -138,17 +136,15 @@ def detect_seasons(pred_array_rescaled, start_date, days_per_dasarian=10):
 
     window_zero = pred_array_rescaled[puncak_kemarau_idx:puncak_kemarau_idx+3].flatten()
     if np.all(window_zero == 0):
-        puncak_kemarau_idx += 1  # dasarian tengah
+        puncak_kemarau_idx += 1
 
     bulan_window_kemarau = df['Bulan'][puncak_kemarau_idx:puncak_kemarau_idx+3]
     bulan_dominan_kemarau = bulan_window_kemarau.mode().iloc[0]
 
-    # Durasi musim hujan
     durasi_hujan = None
     if awal_hujan is not None and awal_kemarau is not None:
         durasi_hujan = awal_kemarau - awal_hujan
 
-    # Durasi musim kemarau
     durasi_kemarau = None
     if awal_kemarau is not None:
         akhir_kemarau_idx = awal_hujan if (awal_hujan is not None and awal_hujan > awal_kemarau) else n
@@ -175,106 +171,56 @@ def detect_seasons(pred_array_rescaled, start_date, days_per_dasarian=10):
     }
     return result
 
+
 def main():
     st.title("Prediksi Musim di Jawa Timur")
 
-    # Pilih topografi
     model, data, scaler_x, scaler_y, zona = pilih_topografi()
-
-    # Pilih musim
     musim = pilih_musim()
-
+    start_date = pd.to_datetime("2024-10-01")
     look_back = 36
 
-    # Siapkan data input fitur untuk prediksi
-    X_all = X_all = data[['TAVG', 'FF_AVG']]  # contoh saja, ganti sesuai fitur yang benar
-    X_scaled = scaler_x.transform(X_all)
+    if st.button("Prediksi Musim"):
+        X_all = data[['TAVG', 'FF_AVG']]  # sesuaikan fitur
+        X_scaled = scaler_x.transform(X_all)
+        X_test_seq = buat_sequence(X_scaled, look_back=look_back)
+        pred_array_rescaled = prediksi_recursive(model, scaler_y, X_test_seq, n_future=36)
+        result = detect_seasons(pred_array_rescaled, start_date)
 
-    X_test_seq = buat_sequence(X_scaled, look_back=look_back)
+        st.subheader("Hasil Deteksi Musim:")
+        if musim == "Musim Hujan":
+            st.write("=== MUSIM HUJAN ===")
+            st.write(f"Awal     : {result['musim_hujan']['awal']}")
+            st.write(f"Puncak   : {result['musim_hujan']['puncak']}")
+            st.write(f"Durasi   : {result['musim_hujan']['durasi (dasarian)']} dasarian\n")
+        else:
+            st.write("=== MUSIM KEMARAU ===")
+            st.write(f"Awal     : {result['musim_kemarau']['awal']}")
+            st.write(f"Puncak   : {result['musim_kemarau']['puncak']}")
+            st.write(f"Durasi   : {result['musim_kemarau']['durasi (dasarian)']} dasarian\n")
 
-    # Prediksi recursive
-    pred_array_rescaled = prediksi_recursive(model, scaler_y, X_test_seq, n_future=36)
-
-    # Tampilkan hasil prediksi per dasarian
-    # st.subheader("Hasil Prediksi Curah Hujan (mm) 36 Dasarian ke Depan:")
-    # for i, val in enumerate(pred_array_rescaled):
-    #     st.write(f"Prediksi ke-{i+1}: {val[0]:.2f} mm")
-
-    # Tanggal mulai prediksi diasumsikan
-    start_date = pd.to_datetime("2024-10-01")
-
-    # Deteksi musim dari hasil prediksi
-    result = detect_seasons(pred_array_rescaled, start_date)
-
-    st.subheader("Hasil Deteksi Musim:")
-    if musim == "Musim Hujan":
-        st.write("=== MUSIM HUJAN ===")
-        st.write(f"Awal     : {result['musim_hujan']['awal']}")
-        st.write(f"Puncak   : {result['musim_hujan']['puncak']}")
-        st.write(f"Durasi   : {result['musim_hujan']['durasi (dasarian)']} dasarian\n")
-    else:
-        st.write("=== MUSIM KEMARAU ===")
-        st.write(f"Awal     : {result['musim_kemarau']['awal']}")
-        st.write(f"Puncak   : {result['musim_kemarau']['puncak']}")
-        st.write(f"Durasi   : {result['musim_kemarau']['durasi (dasarian)']} dasarian\n")
-
-    # Data normal musim untuk perbandingan
-    normal_musim = {
-        'musim_hujan': {
-            '303': {'awal': 'November III', 'akhir': 'April III', 'durasi': 16},
-            '311': {'awal': 'November I', 'akhir': 'April III', 'durasi': 18},
-            '349': {'awal': 'November II', 'akhir': 'Mei I', 'durasi': 18},
-        },
-        'musim_kemarau': {
-            '303': {'awal': 'April III', 'akhir': 'November II', 'durasi': 21},
-            '311': {'awal': 'April III', 'akhir': 'Oktober III', 'durasi': 19},
-            '349': {'awal': 'Mei I', 'akhir': 'November I', 'durasi': 19},
+        normal_musim = {
+            'musim_hujan': {
+                '303': {'awal': 'November III', 'akhir': 'April III', 'durasi': 16},
+                '311': {'awal': 'November I', 'akhir': 'April III', 'durasi': 18},
+                '349': {'awal': 'November II', 'akhir': 'Mei I', 'durasi': 18},
+            },
+            'musim_kemarau': {
+                '303': {'awal': 'April III', 'akhir': 'November II', 'durasi': 21},
+                '311': {'awal': 'April III', 'akhir': 'Oktober III', 'durasi': 19},
+                '349': {'awal': 'Mei I', 'akhir': 'November I', 'durasi': 19},
+            }
         }
-    }
 
-        # Tampilkan tabel data normal musim untuk perbandingan
-    st.subheader("Tabel Data Normal Musim (Semua Zona)")
-
-    if musim == "Musim Hujan":
-        df_normal = pd.DataFrame.from_dict({
-            'Zona': ['303', '311', '349'],
-            'Awal Musim Hujan': [
-                normal_musim['musim_hujan']['303']['awal'],
-                normal_musim['musim_hujan']['311']['awal'],
-                normal_musim['musim_hujan']['349']['awal']
-            ],
-            'Akhir Musim Hujan': [
-                normal_musim['musim_hujan']['303']['akhir'],
-                normal_musim['musim_hujan']['311']['akhir'],
-                normal_musim['musim_hujan']['349']['akhir']
-            ],
-            'Durasi (Dasarian)': [
-                normal_musim['musim_hujan']['303']['durasi'],
-                normal_musim['musim_hujan']['311']['durasi'],
-                normal_musim['musim_hujan']['349']['durasi']
-            ]
+        st.subheader(f"Data Normal Musim Zona {zona}")
+        df_normal = pd.DataFrame({
+            'Musim': ['Musim Hujan', 'Musim Kemarau'],
+            'Awal Normal': [normal_musim['musim_hujan'][zona]['awal'], normal_musim['musim_kemarau'][zona]['awal']],
+            'Akhir Normal': [normal_musim['musim_hujan'][zona]['akhir'], normal_musim['musim_kemarau'][zona]['akhir']],
+            'Durasi (dasarian)': [normal_musim['musim_hujan'][zona]['durasi'], normal_musim['musim_kemarau'][zona]['durasi']]
         })
-    else:
-        df_normal = pd.DataFrame.from_dict({
-            'Zona': ['303', '311', '349'],
-            'Awal Musim Kemarau': [
-                normal_musim['musim_kemarau']['303']['awal'],
-                normal_musim['musim_kemarau']['311']['awal'],
-                normal_musim['musim_kemarau']['349']['awal']
-            ],
-            'Akhir Musim Kemarau': [
-                normal_musim['musim_kemarau']['303']['akhir'],
-                normal_musim['musim_kemarau']['311']['akhir'],
-                normal_musim['musim_kemarau']['349']['akhir']
-            ],
-            'Durasi (Dasarian)': [
-                normal_musim['musim_kemarau']['303']['durasi'],
-                normal_musim['musim_kemarau']['311']['durasi'],
-                normal_musim['musim_kemarau']['349']['durasi']
-            ]
-        })
+        st.table(df_normal)
 
-    st.table(df_normal)
 
 if __name__ == "__main__":
     main()
