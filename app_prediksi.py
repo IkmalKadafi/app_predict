@@ -195,30 +195,42 @@ def set_background_and_style(musim):
 
     css = f"""
     <style>
+    /* Background */
     .stApp {{
-        background: url('{background_url}') no-repeat center center fixed;
+        background-image: url('{background_url}');
         background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: center;
     }}
 
-    div.stButton > button:first-child {{
-        background-color: {button_color};
-        color: white;
-        font-weight: bold;
-        border-radius: 8px;
-        border: none;
-        padding: 0.5em 1.5em;
-        transition: background-color 0.3s ease;
+    /* Style tombol */
+    button.css-1emrehy.edgvbvh3 {{
+        background-color: {button_color} !important;
+        color: white !important;
+        font-weight: bold !important;
+        border-radius: 8px !important;
+        border: none !important;
+        padding: 0.5em 1.5em !important;
+        transition: background-color 0.3s ease !important;
     }}
-    div.stButton > button:first-child:hover {{
-        background-color: #33333388; /* Contoh hover sederhana */
+    button.css-1emrehy.edgvbvh3:hover {{
+        background-color: #33333388 !important;
     }}
 
-    div[role="listbox"] > div:first-child {{
-        background-color: {dropdown_color} !important;
-        color: black !important;
+    /* Style container dropdown (terdekat) */
+    div.css-1wy0on6 {{
+        background-color: {dropdown_bg} !important;
+        color: {dropdown_text} !important;
         border-radius: 6px !important;
         padding: 0.3em 0.5em !important;
     }}
+
+    /* Untuk teks dropdown */
+    div.css-1uccc91-singleValue {{
+        color: {dropdown_text} !important;
+    }}
+
     </style>
     """
 
