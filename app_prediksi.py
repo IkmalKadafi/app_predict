@@ -386,7 +386,7 @@ def main():
                 ],
                 'Akhir Musim Kemarau': [
                     normal_musim['musim_kemarau']['303 (Dataran Rendah)']['akhir'],
-                    normal_musim['musim_kemarau']['Dataran Tinggi']['akhir'],
+                    normal_musim['musim_kemarau']['311 (Dataran Tinggi)']['akhir'],
                     normal_musim['musim_kemarau']['349 (Pesisir)']['akhir']
                 ],
                 'Durasi (Dasarian)': [
