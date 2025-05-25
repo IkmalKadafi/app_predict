@@ -225,19 +225,19 @@ def main():
             df_normal = pd.DataFrame.from_dict({
                 'Zona': ['Dataran Rendah', 'Dataran Tinggi', 'Pesisir'],
                 'Awal Musim Hujan': [
-                    normal_musim['musim_hujan']['303']['awal'],
-                    normal_musim['musim_hujan']['311']['awal'],
-                    normal_musim['musim_hujan']['349']['awal']
+                    normal_musim['musim_hujan']['Dataran Rendah']['awal'],
+                    normal_musim['musim_hujan']['Dataran Tinggi']['awal'],
+                    normal_musim['musim_hujan']['Pesisir']['awal']
                 ],
                 'Akhir Musim Hujan': [
-                    normal_musim['musim_hujan']['303']['akhir'],
-                    normal_musim['musim_hujan']['311']['akhir'],
-                    normal_musim['musim_hujan']['349']['akhir']
+                    normal_musim['musim_hujan']['Dataran Rendah']['akhir'],
+                    normal_musim['musim_hujan']['Dataran Tinggi']['akhir'],
+                    normal_musim['musim_hujan']['Pesisir']['akhir']
                 ],
                 'Durasi (Dasarian)': [
-                    normal_musim['musim_hujan']['303']['durasi'],
-                    normal_musim['musim_hujan']['311']['durasi'],
-                    normal_musim['musim_hujan']['349']['durasi']
+                    normal_musim['musim_hujan']['Dataran Rendah']['durasi'],
+                    normal_musim['musim_hujan']['Dataran Tinggi']['durasi'],
+                    normal_musim['musim_hujan']['Pesisir']['durasi']
                 ]
             })
             st.subheader("Data Normal Musim Hujan untuk Semua Zona")
@@ -245,19 +245,19 @@ def main():
             df_normal = pd.DataFrame.from_dict({
                 'Zona': ['Dataran Rendah', 'Dataran Tinggi', 'Pesisir'],
                 'Awal Musim Kemarau': [
-                    normal_musim['musim_kemarau']['303']['awal'],
-                    normal_musim['musim_kemarau']['311']['awal'],
-                    normal_musim['musim_kemarau']['349']['awal']
+                    normal_musim['musim_kemarau']['Dataran Rendah']['awal'],
+                    normal_musim['musim_kemarau']['Dataran Tinggi']['awal'],
+                    normal_musim['musim_kemarau']['Pesisir']['awal']
                 ],
                 'Akhir Musim Kemarau': [
-                    normal_musim['musim_kemarau']['303']['akhir'],
-                    normal_musim['musim_kemarau']['311']['akhir'],
-                    normal_musim['musim_kemarau']['349']['akhir']
+                    normal_musim['musim_kemarau']['Dataran Rendah']['akhir'],
+                    normal_musim['musim_kemarau']['Dataran Tinggi']['akhir'],
+                    normal_musim['musim_kemarau']['Pesisir']['akhir']
                 ],
                 'Durasi (Dasarian)': [
-                    normal_musim['musim_kemarau']['303']['durasi'],
-                    normal_musim['musim_kemarau']['311']['durasi'],
-                    normal_musim['musim_kemarau']['349']['durasi']
+                    normal_musim['musim_kemarau']['Dataran Rendah']['durasi'],
+                    normal_musim['musim_kemarau']['Dataran Tinggi']['durasi'],
+                    normal_musim['musim_kemarau']['Pesisir']['durasi']
                 ]
             })
             st.subheader("Data Normal Musim Kemarau untuk Semua Zona")
