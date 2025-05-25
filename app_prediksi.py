@@ -188,15 +188,15 @@ def set_background_and_style(musim): # Tambah parameter opasitas
         # Bentuk URL lengkap ke gambar di GitHub
         background_url = f"{base_raw_url}Data/bg/kemarau.jpg"  # PASTIKAN PATH INI SESUAI DI REPO KAMU
         button_color = "#A0522D"
-        dropdown_bg = "#DEB887"
-        dropdown_text = "#000000"
+        dropdown_bg = "#EAEBD0"
+        dropdown_text = "#521C0D"
         text_color_header = "#A0522D"
-        text_color_general = "#2F4F4F" # DarkSlateGray, baik untuk background terang
+        text_color_general = "#4B352A" # DarkSlateGray, baik untuk background terang
     else: # Asumsi Musim Hujan
         background_url = f"{base_raw_url}Data/bg/hujan.jpg"   # PASTIKAN PATH INI SESUAI DI REPO KAMU
         button_color = "#1E90FF"
         dropdown_bg = "#87CEFA"
-        dropdown_text = "#000000"
+        dropdown_text = "#94B4C1"
         text_color_header = "#1E90FF"
         text_color_general = "#FFFFFF" # Putih, baik untuk background gelap/biru
 
