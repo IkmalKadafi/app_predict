@@ -195,7 +195,7 @@ def set_background_and_style():
     table_border_color = "#90D1CA"
 
     # --- TAMBAHKAN URL RAW GAMBAR HEADER ANDA DI SINI ---
-    header_image_url = "https://raw.githubusercontent.com/IkmalKadafi/app_predict/main/Data/bg/hujan.jpg" # GANTI DENGAN URL GAMBAR ANDA
+    header_image_url = "https://raw.githubusercontent.com/IkmalKadafi/app_predict/main/Data/bg/header.jpg" # GANTI DENGAN URL GAMBAR ANDA
 
     css = f"""
     <style>
@@ -278,7 +278,7 @@ def set_background_and_style():
         background-size: cover !important;
         background-position: center center !important;
         background-repeat: no-repeat !important;
-        height: 100px !important;
+        height: 80px !important;
     }}
 
     /* --- STYLING TABEL --- */
