@@ -183,23 +183,25 @@ def detect_seasons(pred_array_rescaled, start_date, days_per_dasarian=10):
 
 def set_background_and_style():
     # Define a single, consistent color palette
-    background_color = "#FFFBDE"  # A light, neutral background
-    primary_color = "#90D1CA"     # A nice blue for primary elements (buttons, borders)
-    secondary_color = "#096B68"   # Dark teal (used for dropdown backgrounds based on your CSS)
-    text_color_header = "#096B68" # Dark gray for headers
-    text_color_general = "#096B68" # Slightly lighter gray for general text
-    dropdown_text_color = "#129990" # Dark gray for dropdown text
+    background_color = "#FFFBDE"
+    primary_color = "#90D1CA"
+    secondary_color = "#096B68"
+    text_color_header = "#096B68"
+    text_color_general = "#096B68"
+    dropdown_text_color = "#129990"
 
-    # New colors for table
-    table_header_bg_color = "#7AE2CF"  # Light gray for table header background
-    table_cell_bg_color = "#FFFBDE"    # Very light gray/off-white for table cell background
-    table_border_color = "#90D1CA"     # Medium gray for table borders
+    table_header_bg_color = "#7AE2CF"
+    table_cell_bg_color = "#FFFBDE"
+    table_border_color = "#90D1CA"
+
+    # --- TAMBAHKAN URL RAW GAMBAR HEADER ANDA DI SINI ---
+    header_image_url = "https://raw.githubusercontent.com/IkmalKadafi/app_project/main/Data/bg/header.jpg" # GANTI DENGAN URL GAMBAR ANDA
 
     css = f"""
     <style>
     /* Targetkan kontainer utama aplikasi Streamlit */
     [data-testid="stAppViewContainer"], [data-testid="stDecoration"] {{
-        background-color: {background_color} !important; /* Solid background color */
+        background-color: {background_color} !important;
     }}
 
     /* Styling umum untuk teks */
@@ -207,12 +209,12 @@ def set_background_and_style():
         color: {text_color_general} !important;
     }}
 
-    h1, h2, h3, h4, h5, h6, .stSubheader {{ /* Termasuk st.subheader */
+    h1, h2, h3, h4, h5, h6, .stSubheader {{
         color: {text_color_header} !important;
         font-weight: bold;
     }}
 
-    /* Styling untuk Label Widget (Tambahan Baru) */
+    /* Styling untuk Label Widget */
     div[data-testid="stSelectbox"] label,
     div[data-testid="stTextInput"] label,
     div[data-testid="stTextArea"] label,
@@ -237,8 +239,8 @@ def set_background_and_style():
     }}
 
     div[data-testid="stButton"] > button:hover {{
-        background-color: {secondary_color} !important; /* Menggunakan secondary_color untuk hover button background */
-        color: {primary_color} !important; /* Primary color for text on hover */
+        background-color: {secondary_color} !important;
+        color: {primary_color} !important;
         border: 1px solid {primary_color} !important;
         transform: scale(1.03);
     }}
@@ -249,61 +251,66 @@ def set_background_and_style():
 
     /* Dropdown (Selectbox) */
     div[data-testid="stSelectbox"] > div {{
-        background-color: {secondary_color} !important; /* Background untuk dropdown box */
+        background-color: {secondary_color} !important;
         border-radius: 6px !important;
-        border: 1px solid {primary_color} !important; /* Primary color border */
+        border: 1px solid {primary_color} !important;
     }}
 
-    /* Teks di dalam kotak opsi yang dipilih dan ikon panah pada Selectbox */
-    div[data-testid="stSelectbox"] .st-bb, /* Selector untuk teks dalam kotak (mungkin perlu disesuaikan) */
-    div[data-testid="stSelectbox"] .st-cq, /* Selector lain yang mungkin untuk teks dalam kotak */
-    div[data-testid="stSelectbox"] div[data-baseweb="select"] > div:first-child > div, /* Teks dan ikon panah */
-    div[data-testid="stSelectbox"] div[data-baseweb="select"] input {{ /* Fallback untuk teks di dalam input (jika berlaku) */
+    div[data-testid="stSelectbox"] .st-bb,
+    div[data-testid="stSelectbox"] .st-cq,
+    div[data-testid="stSelectbox"] div[data-baseweb="select"] > div:first-child > div,
+    div[data-testid="stSelectbox"] div[data-baseweb="select"] input {{
         color: {dropdown_text_color} !important;
     }}
     
-    /* Dropdown options list */
     div[data-baseweb="popover"] ul li {{
-        background-color: {secondary_color} !important; /* Background untuk opsi */
-        color: {dropdown_text_color} !important; /* Warna teks untuk opsi */
+        background-color: {secondary_color} !important;
+        color: {dropdown_text_color} !important;
     }}
     div[data-baseweb="popover"] ul li:hover {{
-        background-color: {primary_color} !important; /* Primary color background on hover */
-        color: white !important; /* White text on hover */
+        background-color: {primary_color} !important;
+        color: white !important;
     }}
 
-    /* Header default Streamlit */
+    /* Header default Streamlit dengan Gambar Latar Belakang */
     [data-testid="stHeader"] {{
-        background-color: rgba(0,0,0,0) !important; /* Transparent header */
+        background-image: url('{header_image_url}') !important;
+        background-size: cover !important; /* atau 'contain', 'auto', atau ukuran spesifik */
+        background-position: center center !important; /* posisi gambar */
+        background-repeat: no-repeat !important; /* jangan ulangi gambar */
+        /* Anda mungkin ingin mengatur tinggi header secara eksplisit jika perlu */
+        /* height: 150px !important; */ /* Contoh tinggi header */
+        /* background-color: rgba(0,0,0,0.2) !important; */ /* Opsional: tambahkan overlay warna semi-transparan di atas gambar */
     }}
 
     /* --- STYLING TABEL --- */
     [data-testid="stTable"] table {{
-        width: 100%; /* Membuat tabel responsif */
-        border-collapse: collapse; /* Menghilangkan spasi antar border */
-        background-color: {table_cell_bg_color} !important; /* Background color for the entire table body */
+        width: 100%;
+        border-collapse: collapse;
+        background-color: {table_cell_bg_color} !important;
     }}
 
-    [data-testid="stTable"] table th, /* Header tabel */
-    [data-testid="stTable"] table td {{ /* Sel data tabel */
-        color: {text_color_general} !important; /* Menggunakan warna teks umum */
-        border: 1px solid {table_border_color} !important; /* Menambahkan border dengan warna tabel */
-        padding: 8px !important; /* Menambahkan padding pada sel */
-        text-align: left !important; /* Mengatur perataan teks */
+    [data-testid="stTable"] table th,
+    [data-testid="stTable"] table td {{
+        color: {text_color_general} !important;
+        border: 1px solid {table_border_color} !important;
+        padding: 8px !important;
+        text-align: left !important;
     }}
 
-    [data-testid="stTable"] table td {{ /* Styling spesifik untuk sel data tabel */
-        background-color: {table_cell_bg_color} !important; /* Warna background sel data tabel */
+    [data-testid="stTable"] table td {{
+        background-color: {table_cell_bg_color} !important;
     }}
 
-    [data-testid="stTable"] table th {{ /* Styling spesifik untuk header tabel */
-        background-color: {table_header_bg_color} !important; /* Warna background header tabel */
-        color: {text_color_header} !important; /* Warna teks header tabel */
+    [data-testid="stTable"] table th {{
+        background-color: {table_header_bg_color} !important;
+        color: {text_color_header} !important;
         font-weight: bold;
     }}
     </style>
     """
     st.markdown(css, unsafe_allow_html=True)
+
 
 def main():
     st.title("Prediksi Musim di Jawa Timur")
