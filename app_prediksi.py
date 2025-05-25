@@ -223,7 +223,7 @@ def main():
         # Tampilkan data normal musim untuk SEMUA zona, tergantung musim yang dipilih
         if musim == "Musim Hujan":
             df_normal = pd.DataFrame.from_dict({
-                'Zona': ['303', '311', '349'],
+                'Zona': ['Dataran Rendah', 'Dataran Tinggi', 'Pesisir'],
                 'Awal Musim Hujan': [
                     normal_musim['musim_hujan']['303']['awal'],
                     normal_musim['musim_hujan']['311']['awal'],
@@ -243,7 +243,7 @@ def main():
             st.subheader("Data Normal Musim Hujan untuk Semua Zona")
         else:
             df_normal = pd.DataFrame.from_dict({
-                'Zona': ['303', '311', '349'],
+                'Zona': ['Dataran Rendah', 'Dataran Tinggi', 'Pesisir'],
                 'Awal Musim Kemarau': [
                     normal_musim['musim_kemarau']['303']['awal'],
                     normal_musim['musim_kemarau']['311']['awal'],
@@ -269,7 +269,7 @@ def main():
     if not st.session_state["prediksi_ditekan"]:
         st.subheader("Tabel Data Normal Musim (Durasi dalam Dasarian)")
         normal_df = pd.DataFrame({
-            "Zona": ["303", "311", "349"],
+            "Zona": ["Dataran Rendah", "Dataran Tinggi", "Pesisir"],
             "Awal Hujan": ["November III", "November I", "November II"],
             "Akhir Hujan": ["April III", "April III", "Mei I"],
             "Durasi Hujan": [16, 18, 18],
