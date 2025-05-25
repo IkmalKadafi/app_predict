@@ -187,11 +187,11 @@ def set_background_and_style():
     primary_color = "#90D1CA"     # A nice blue for primary elements (buttons, borders)
     secondary_color = "#096B68"   # White for dropdown backgrounds, card backgrounds
     text_color_header = "#096B68" # Dark gray for headers
-    text_color_general = "#129990" # Slightly lighter gray for general text
+    text_color_general = "#096B68" # Slightly lighter gray for general text
     dropdown_text_color = "#129990" # Dark gray for dropdown text
 
     # New colors for table
-    table_header_bg_color = "#096B68"  # Light gray for table header background
+    table_header_bg_color = "#129990"  # Light gray for table header background
     table_cell_bg_color = "#90D1CA"    # Very light gray/off-white for table cell background
     table_border_color = "#90D1CA"     # Medium gray for table borders
 
