@@ -189,7 +189,7 @@ def set_background_and_style(musim): # Tambah parameter opasitas
         background_url = f"{base_raw_url}Data/bg/kemarau.jpg"  # PASTIKAN PATH INI SESUAI DI REPO KAMU
         button_color = "#A0522D"
         dropdown_bg = "#EAEBD0"
-        dropdown_text = "#521C0D"
+        dropdown_text = "#FFDF88"
         text_color_header = "#A0522D"
         text_color_general = "#4B352A" # DarkSlateGray, baik untuk background terang
     else: # Asumsi Musim Hujan
@@ -283,8 +283,6 @@ def main():
 
     model, data, scaler_x, scaler_y, zona = pilih_topografi()
     musim = pilih_musim()
-    opasitas_bg = st.slider("Pilih Opasitas Background:", min_value=0.0, max_value=1.0, value=0.5, step=0.1)
-    set_background_and_style(musim)
     start_date = pd.to_datetime("2024-10-01")
     look_back = 36
 
