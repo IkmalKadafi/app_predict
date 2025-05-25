@@ -195,7 +195,7 @@ def set_background_and_style():
     table_border_color = "#90D1CA"
 
     # --- TAMBAHKAN URL RAW GAMBAR HEADER ANDA DI SINI ---
-    header_image_url = "https://raw.githubusercontent.com/IkmalThariq/app_predict/main/Data/bg/header.jpg" # GANTI DENGAN URL GAMBAR ANDA
+    header_image_url = "https://raw.githubusercontent.com/IkmalThariq/app_predict/main/Data/bg/hujan.jpg" # GANTI DENGAN URL GAMBAR ANDA
 
     css = f"""
     <style>
@@ -279,7 +279,7 @@ def set_background_and_style():
         background-position: center center !important; /* posisi gambar */
         background-repeat: no-repeat !important; /* jangan ulangi gambar */
         /* Anda mungkin ingin mengatur tinggi header secara eksplisit jika perlu */
-        /* height: 150px !important; */ /* Contoh tinggi header */
+        height: 100px !important; /* Contoh tinggi header */
         /* background-color: rgba(0,0,0,0.2) !important; */ /* Opsional: tambahkan overlay warna semi-transparan di atas gambar */
     }}
 
