@@ -29,11 +29,16 @@ scaler_y_311 = joblib.load('Data/scaler/scaler_y_311.pkl')
 scaler_y_303 = joblib.load('Data/scaler/scaler_y_303.pkl')
 scaler_y_349 = joblib.load('Data/scaler/scaler_y_349.pkl')
 
+def reset_prediksi():
+    st.session_state["prediksi_ditekan"] = False
+
 def pilih_topografi():
     dropdown = st.selectbox(
         "Pilih Topografi yang diinginkan:",
-        ("Dataran Tinggi", "Dataran Rendah", "Pesisir")
+        ("Dataran Tinggi", "Dataran Rendah", "Pesisir"),
+        on_change=reset_prediksi
     )
+    
     if dropdown == 'Dataran Tinggi':
         model = model_311
         data = data_311
@@ -58,7 +63,8 @@ def pilih_topografi():
 def pilih_musim():
     musim = st.selectbox(
         "Pilih Musim yang Ingin Diprediksi:",
-        ("Musim Kemarau", "Musim Hujan")
+        ("Musim Kemarau", "Musim Hujan"),
+        on_change=reset_prediksi
     )
     st.write(f"Musim yang dipilih: **{musim}**")
     return musim
