@@ -250,9 +250,6 @@ def main():
     if "prediksi_ditekan" not in st.session_state:
         st.session_state["prediksi_ditekan"] = False
 
-    model, data, scaler_x, scaler_y, zona = pilih_topografi()
-    musim = pilih_musim()
-
     # Tabel Normal Musim hanya tampil jika tombol BELUM ditekan
     if not st.session_state["prediksi_ditekan"]:
         st.subheader("Tabel Data Normal Musim (Durasi dalam Dasarian)")
