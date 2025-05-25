@@ -182,20 +182,31 @@ def detect_seasons(pred_array_rescaled, start_date, days_per_dasarian=10):
     return result
 
 def set_background_and_style(musim):
+    # Base URL untuk file mentah di GitHub
+    base_raw_url = f"https://raw.githubusercontent.com/IkmalKadafi/app_predict/main/"
+
     if musim == "Musim Kemarau":
-        background_url = "Data/bg/kemarau.jpg"
+        # Bentuk URL lengkap ke gambar di GitHub
+        background_url = f"{base_raw_url}Data/bg/kemarau.jpg"  # PASTIKAN PATH INI SESUAI DI REPO KAMU
         button_color = "#A0522D"
         dropdown_bg = "#DEB887"
         dropdown_text = "#000000"
-    else:
-        background_url = "Data/bg/hujan.jpg"
+        text_color_header = "#A0522D"
+        text_color_general = "#2F4F4F" # DarkSlateGray, baik untuk background terang
+    else: # Asumsi Musim Hujan
+        background_url = f"{base_raw_url}Data/bg/hujan.jpg"   # PASTIKAN PATH INI SESUAI DI REPO KAMU
         button_color = "#1E90FF"
         dropdown_bg = "#87CEFA"
         dropdown_text = "#000000"
+        text_color_header = "#1E90FF"
+        text_color_general = "#FFFFFF" # Putih, baik untuk background gelap/biru
 
+    # CSS dengan URL gambar dari GitHub
+    # Tidak perlu lagi konversi ke base64
     css = f"""
     <style>
-    .stApp {{
+    /* Targetkan kontainer utama aplikasi Streamlit */
+    [data-testid="stAppViewContainer"], [data-testid="stDecoration"] {{ /* Coba kedua selector ini */
         background-image: url('{background_url}');
         background-size: cover;
         background-repeat: no-repeat;
@@ -203,33 +214,66 @@ def set_background_and_style(musim):
         background-position: center;
     }}
 
-    button.css-1emrehy.edgvbvh3 {{
+    /* Styling umum untuk teks agar lebih mudah dibaca */
+    body, .stMarkdown, .stTextInput > div > div > input, .stTextArea > div > div > textarea {{
+        color: {text_color_general} !important;
+    }}
+
+    h1, h2, h3, h4, h5, h6 {{
+        color: {text_color_header} !important;
+        font-weight: bold;
+    }}
+
+    /* Tombol - Gunakan data-testid jika memungkinkan */
+    div[data-testid="stButton"] > button {{
         background-color: {button_color} !important;
         color: white !important;
         font-weight: bold !important;
         border-radius: 8px !important;
-        border: none !important;
-        padding: 0.5em 1.5em !important;
-        transition: background-color 0.3s ease !important;
+        border: 1px solid {button_color} !important;
+        padding: 0.6em 1.5em !important;
+        transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease !important;
     }}
 
-    button.css-1emrehy.edgvbvh3:hover {{
-        background-color: #33333388 !important;
+    div[data-testid="stButton"] > button:hover {{
+        background-color: #FFFFFF !important; /* Efek hover: background putih */
+        color: {button_color} !important;      /* Teks jadi warna tombol */
+        border: 1px solid {button_color} !important;
+        transform: scale(1.03);
     }}
 
-    div.css-1wy0on6 {{
+    div[data-testid="stButton"] > button:active {{
+        transform: scale(0.98);
+    }}
+
+    /* Dropdown (Selectbox) - Gunakan data-testid jika memungkinkan */
+    div[data-testid="stSelectbox"] > div {{
+        background-color: {dropdown_bg} !important;
+        border-radius: 6px !important;
+        border: 1px solid {button_color} !important;
+    }}
+
+    div[data-testid="stSelectbox"] .st-bq, /* Teks placeholder/label */
+    div[data-testid="stSelectbox"] div[data-baseweb="select"] > div:first-child > div {{ /* Teks nilai yang terpilih */
+        color: {dropdown_text} !important;
+    }}
+    
+    /* Opsi dropdown saat dibuka */
+    div[data-baseweb="popover"] ul li {{
         background-color: {dropdown_bg} !important;
         color: {dropdown_text} !important;
-        border-radius: 6px !important;
-        padding: 0.3em 0.5em !important;
+    }}
+    div[data-baseweb="popover"] ul li:hover {{
+        background-color: {button_color} !important;
+        color: white !important;
     }}
 
-    div.css-1uccc91-singleValue {{
-        color: {dropdown_text} !important;
+    /* Untuk menghilangkan background header default Streamlit jika ada */
+    [data-testid="stHeader"] {{
+        background-color: rgba(0,0,0,0) !important;
     }}
     </style>
     """
-
     st.markdown(css, unsafe_allow_html=True)
 
 
