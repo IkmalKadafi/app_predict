@@ -183,17 +183,17 @@ def detect_seasons(pred_array_rescaled, start_date, days_per_dasarian=10):
 
 def set_background_and_style():
     # Define a single, consistent color palette
-    background_color = "#F1BA88"  # A light, neutral background
-    primary_color = "#81E7AF"     # A nice blue for primary elements (buttons, borders)
-    secondary_color = "#E9F5BE"   # White for dropdown backgrounds, card backgrounds
-    text_color_header = "#A76545" # Dark gray for headers
-    text_color_general = "#03A791" # Slightly lighter gray for general text
-    dropdown_text_color = "#03A791" # Dark gray for dropdown text
+    background_color = "#FFFBDE"  # A light, neutral background
+    primary_color = "#90D1CA"     # A nice blue for primary elements (buttons, borders)
+    secondary_color = "#096B68"   # White for dropdown backgrounds, card backgrounds
+    text_color_header = "#096B68" # Dark gray for headers
+    text_color_general = "#129990" # Slightly lighter gray for general text
+    dropdown_text_color = "#129990" # Dark gray for dropdown text
 
     # New colors for table
-    table_header_bg_color = "#E0E0E0"  # Light gray for table header background
-    table_cell_bg_color = "#FAFAFA"    # Very light gray/off-white for table cell background
-    table_border_color = "#CCCCCC"     # Medium gray for table borders
+    table_header_bg_color = "#096B68"  # Light gray for table header background
+    table_cell_bg_color = "#90D1CA"    # Very light gray/off-white for table cell background
+    table_border_color = "#90D1CA"     # Medium gray for table borders
 
     css = f"""
     <style>
