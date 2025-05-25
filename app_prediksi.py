@@ -196,9 +196,9 @@ def main():
     pred_array_rescaled = prediksi_recursive(model, scaler_y, X_test_seq, n_future=36)
 
     # Tampilkan hasil prediksi per dasarian
-    st.subheader("Hasil Prediksi Curah Hujan (mm) 36 Dasarian ke Depan:")
-    for i, val in enumerate(pred_array_rescaled):
-        st.write(f"Prediksi ke-{i+1}: {val[0]:.2f} mm")
+    # st.subheader("Hasil Prediksi Curah Hujan (mm) 36 Dasarian ke Depan:")
+    # for i, val in enumerate(pred_array_rescaled):
+    #     st.write(f"Prediksi ke-{i+1}: {val[0]:.2f} mm")
 
     # Tanggal mulai prediksi diasumsikan
     start_date = pd.to_datetime("2024-10-01")
