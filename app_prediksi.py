@@ -177,23 +177,12 @@ def detect_seasons(pred_array_rescaled, start_date, days_per_dasarian=10):
 
 def main():
     st.title("Prediksi Musim di Jawa Timur")
+    # Inisialisasi state jika belum ada
+    if "prediksi_ditekan" not in st.session_state:
+        st.session_state["prediksi_ditekan"] = False
 
     model, data, scaler_x, scaler_y, zona = pilih_topografi()
     musim = pilih_musim()
-    
-    # # Tabel Normal Musim ditampilkan SEBELUM tombol diklik
-    # st.subheader("Tabel Data Normal Musim (Durasi dalam Dasarian)")
-    # normal_df = pd.DataFrame({
-    #     "Zona": ["303", "311", "349"],
-    #     "Awal Hujan": ["November III", "November I", "November II"],
-    #     "Akhir Hujan": ["April III", "April III", "Mei I"],
-    #     "Durasi Hujan": [16, 18, 18],
-    #     "Awal Kemarau": ["April III", "April III", "Mei I"],
-    #     "Akhir Kemarau": ["November II", "Oktober III", "November I"],
-    #     "Durasi Kemarau": [21, 19, 19]
-    # })
-    # st.table(normal_df)
-
     start_date = pd.to_datetime("2024-10-01")
     look_back = 36
 
@@ -231,20 +220,45 @@ def main():
         }
 
         # Tampilkan data normal musim sesuai zona dan musim yang dipilih
-        st.subheader(f"Data Normal untuk Zona {zona} ({musim})")
         if musim == "Musim Hujan":
-            df_normal = pd.DataFrame({
-                'Awal Normal': [normal_musim['musim_hujan'][zona]['awal']],
-                'Akhir Normal': [normal_musim['musim_hujan'][zona]['akhir']],
-                'Durasi (dasarian)': [normal_musim['musim_hujan'][zona]['durasi']]
-            })
+        df_normal = pd.DataFrame.from_dict({
+            'Zona': ['303', '311', '349'],
+            'Awal Musim Hujan': [
+                normal_musim['musim_hujan']['303']['awal'],
+                normal_musim['musim_hujan']['311']['awal'],
+                normal_musim['musim_hujan']['349']['awal']
+            ],
+            'Akhir Musim Hujan': [
+                normal_musim['musim_hujan']['303']['akhir'],
+                normal_musim['musim_hujan']['311']['akhir'],
+                normal_musim['musim_hujan']['349']['akhir']
+            ],
+            'Durasi (Dasarian)': [
+                normal_musim['musim_hujan']['303']['durasi'],
+                normal_musim['musim_hujan']['311']['durasi'],
+                normal_musim['musim_hujan']['349']['durasi']
+            ]
+        })
         else:
-            df_normal = pd.DataFrame({
-                'Awal Normal': [normal_musim['musim_kemarau'][zona]['awal']],
-                'Akhir Normal': [normal_musim['musim_kemarau'][zona]['akhir']],
-                'Durasi (dasarian)': [normal_musim['musim_kemarau'][zona]['durasi']]
+            df_normal = pd.DataFrame.from_dict({
+                'Zona': ['303', '311', '349'],
+                'Awal Musim Kemarau': [
+                    normal_musim['musim_kemarau']['303']['awal'],
+                    normal_musim['musim_kemarau']['311']['awal'],
+                    normal_musim['musim_kemarau']['349']['awal']
+                ],
+                'Akhir Musim Kemarau': [
+                    normal_musim['musim_kemarau']['303']['akhir'],
+                    normal_musim['musim_kemarau']['311']['akhir'],
+                    normal_musim['musim_kemarau']['349']['akhir']
+                ],
+                'Durasi (Dasarian)': [
+                    normal_musim['musim_kemarau']['303']['durasi'],
+                    normal_musim['musim_kemarau']['311']['durasi'],
+                    normal_musim['musim_kemarau']['349']['durasi']
+                ]
             })
-        st.table(df_normal)
+            st.table(df_normal)
 
     # Inisialisasi state jika belum ada
     if "prediksi_ditekan" not in st.session_state:
