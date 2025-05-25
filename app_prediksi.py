@@ -177,18 +177,6 @@ def main():
 
     model, data, scaler_x, scaler_y, zona = pilih_topografi()
     musim = pilih_musim()
-    # Tampilkan tabel data normal musim sebelum prediksi
-    st.subheader("Tabel Data Normal Musim (Durasi dalam Dasarian)")
-    normal_df = pd.DataFrame({
-        "Zona": ["303", "311", "349"],
-        "Awal Hujan": ["November III", "November I", "November II"],
-        "Akhir Hujan": ["April III", "April III", "Mei I"],
-        "Durasi Hujan": [16, 18, 18],
-        "Awal Kemarau": ["April III", "April III", "Mei I"],
-        "Akhir Kemarau": ["November II", "Oktober III", "November I"],
-        "Durasi Kemarau": [21, 19, 19]
-    })
-    st.table(normal_df)
     start_date = pd.to_datetime("2024-10-01")
     look_back = 36
 
@@ -232,6 +220,20 @@ def main():
             'Durasi (dasarian)': [normal_musim['musim_hujan'][zona]['durasi'], normal_musim['musim_kemarau'][zona]['durasi']]
         })
         st.table(df_normal)
+        
+    # Tabel Normal Musim hanya tampil jika tombol BELUM ditekan
+    if not st.session_state["prediksi_ditekan"]:
+        st.subheader("Tabel Data Normal Musim (Durasi dalam Dasarian)")
+        normal_df = pd.DataFrame({
+            "Zona": ["303", "311", "349"],
+            "Awal Hujan": ["November III", "November I", "November II"],
+            "Akhir Hujan": ["April III", "April III", "Mei I"],
+            "Durasi Hujan": [16, 18, 18],
+            "Awal Kemarau": ["April III", "April III", "Mei I"],
+            "Akhir Kemarau": ["November II", "Oktober III", "November I"],
+            "Durasi Kemarau": [21, 19, 19]
+        })
+        st.table(normal_df)
 
 
 if __name__ == "__main__":
