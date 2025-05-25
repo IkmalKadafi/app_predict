@@ -291,13 +291,13 @@ def set_background_and_style():
 
 def main():
     st.title("Prediksi Musim di Jawa Timur")
+    set_background_and_style()
     # Inisialisasi state jika belum ada
     if "prediksi_ditekan" not in st.session_state:
         st.session_state["prediksi_ditekan"] = False
 
     model, data, scaler_x, scaler_y, zona = pilih_topografi()
     musim = pilih_musim()
-    set_background_and_style(musim)
     start_date = pd.to_datetime("2024-10-01")
     look_back = 36
 
