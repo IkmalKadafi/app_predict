@@ -181,7 +181,7 @@ def detect_seasons(pred_array_rescaled, start_date, days_per_dasarian=10):
     }
     return result
 
-def set_background_and_style(musim, github_username, repo_name, branch_name="main", background_opacity=0.5): # Tambah parameter opasitas
+def set_background_and_style(musim, background_opacity=0.5): # Tambah parameter opasitas
     base_raw_url = f"https://raw.githubusercontent.com/IkmalKadafi/app_predict/main/"
 
     if musim == "Musim Kemarau":
@@ -304,7 +304,10 @@ def main():
 
     model, data, scaler_x, scaler_y, zona = pilih_topografi()
     musim = pilih_musim()
-    set_background_and_style(musim)
+    opasitas_bg = st.slider("Pilih Opasitas Background:", min_value=0.0, max_value=1.0, value=0.5, step=0.1)
+    set_background_and_style(
+        musim=musim,
+        background_opacity=opasitas_bg)
     start_date = pd.to_datetime("2024-10-01")
     look_back = 36
 
