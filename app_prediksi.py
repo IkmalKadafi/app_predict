@@ -194,8 +194,11 @@ def set_background_and_style():
     table_cell_bg_color = "#FFFBDE"
     table_border_color = "#90D1CA"
 
-    # --- TAMBAHKAN URL RAW GAMBAR HEADER ANDA DI SINI ---
-    header_image_url = "https://raw.githubusercontent.com/IkmalKadafi/app_project/main/Data/bg/header.jpg" # GANTI DENGAN URL GAMBAR ANDA
+    # --- PENTING: GANTI DENGAN URL RAW GAMBAR HEADER ANDA YANG VALID ---
+    # Contoh URL SALAH: https://github.com/username/repo/blob/main/image.png
+    # Contoh URL BENAR: https://raw.githubusercontent.com/username/repo/main/image.png
+    # PASTIKAN URL INI DIAWALI DENGAN https://raw.githubusercontent.com/...
+    header_image_url = "https://raw.githubusercontent.com/IkmalKadafi/app_predict//main//Data/bg/header.png" # <--- GANTI INI!
 
     css = f"""
     <style>
@@ -272,15 +275,14 @@ def set_background_and_style():
         color: white !important;
     }}
 
-    /* Header default Streamlit dengan Gambar Latar Belakang */
+    /* Header default Streamlit dengan Gambar Latar Belakang dan Tinggi Disesuaikan */
     [data-testid="stHeader"] {{
         background-image: url('{header_image_url}') !important;
-        background-size: cover !important; /* atau 'contain', 'auto', atau ukuran spesifik */
-        background-position: center center !important; /* posisi gambar */
-        background-repeat: no-repeat !important; /* jangan ulangi gambar */
-        /* Anda mungkin ingin mengatur tinggi header secara eksplisit jika perlu */
-        /* height: 150px !important; */ /* Contoh tinggi header */
-        /* background-color: rgba(0,0,0,0.2) !important; */ /* Opsional: tambahkan overlay warna semi-transparan di atas gambar */
+        background-size: cover !important;
+        background-position: center center !important;
+        background-repeat: no-repeat !important;
+        height: 200px !important; /* <<< ATUR TINGGI HEADER DI SINI (misal: 200px). Sesuaikan dengan keinginan Anda. */
+        /* background-color: rgba(0,0,0,0) !important; */ /* Ini bisa dipertahankan agar jika gambar gagal, header transparan */
     }}
 
     /* --- STYLING TABEL --- */
@@ -309,7 +311,16 @@ def set_background_and_style():
     }}
     </style>
     """
-    st.markdown(css, unsafe_allow_html=True)
+    # Hanya jalankan markdown jika URL gambar tidak kosong (atau tidak placeholder)
+    # Ini untuk mencegah error jika URL belum diisi dengan benar
+    if header_image_url and "https://raw.githubusercontent.com/IkmalKadafi/app_predict//main//Data/bg/header.png" not in header_image_url:
+        st.markdown(css, unsafe_allow_html=True)
+    else:
+        # Berikan pesan jika URL belum diisi, agar CSS header tidak diterapkan dengan URL yang salah
+        placeholder_css = css.replace(f"background-image: url('{header_image_url}') !important;", "/* URL Gambar Header Belum Diatur Dengan Benar */")
+        st.markdown(placeholder_css, unsafe_allow_html=True)
+        if "MASUKKAN_URL_RAW_GAMBAR_GITHUB_ANDA_DI_SINI" in header_image_url:
+            st.warning("⚠️ URL gambar header belum diatur dengan benar dalam kode `set_background_and_style()`. Harap ganti placeholder dengan URL raw gambar Anda.")
 
 
 def main():
