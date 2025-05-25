@@ -181,38 +181,60 @@ def detect_seasons(pred_array_rescaled, start_date, days_per_dasarian=10):
     }
     return result
 
-def set_background_and_style(musim):
-    # Base URL untuk file mentah di GitHub
+def set_background_and_style(musim, github_username, repo_name, branch_name="main", background_opacity=0.5): # Tambah parameter opasitas
     base_raw_url = f"https://raw.githubusercontent.com/IkmalKadafi/app_predict/main/"
 
     if musim == "Musim Kemarau":
-        # Bentuk URL lengkap ke gambar di GitHub
-        background_url = f"{base_raw_url}Data/bg/kemarau.jpg"  # PASTIKAN PATH INI SESUAI DI REPO KAMU
+        background_url = f"{base_raw_url}Data/bg/kemarau.jpg"
         button_color = "#A0522D"
         dropdown_bg = "#DEB887"
         dropdown_text = "#000000"
         text_color_header = "#A0522D"
-        text_color_general = "#2F4F4F" # DarkSlateGray, baik untuk background terang
+        text_color_general = "#2F4F4F"
+        overlay_color = f"rgba(255, 255, 255, {background_opacity})" # Overlay putih untuk kemarau (agar lebih terang/pudar)
     else: # Asumsi Musim Hujan
-        background_url = f"{base_raw_url}Data/bg/hujan.jpg"   # PASTIKAN PATH INI SESUAI DI REPO KAMU
+        background_url = f"{base_raw_url}Data/bg/hujan.jpg"
         button_color = "#1E90FF"
         dropdown_bg = "#87CEFA"
         dropdown_text = "#000000"
         text_color_header = "#1E90FF"
-        text_color_general = "#FFFFFF" # Putih, baik untuk background gelap/biru
+        text_color_general = "#FFFFFF"
+        overlay_color = f"rgba(0, 0, 0, {background_opacity})" # Overlay hitam untuk hujan (agar lebih gelap/pudar)
 
-    # CSS dengan URL gambar dari GitHub
-    # Tidak perlu lagi konversi ke base64
+
     css = f"""
     <style>
     /* Targetkan kontainer utama aplikasi Streamlit */
-    [data-testid="stAppViewContainer"], [data-testid="stDecoration"] {{ /* Coba kedua selector ini */
+    [data-testid="stAppViewContainer"], [data-testid="stDecoration"] {{
+        position: relative; /* Diperlukan agar z-index pseudo-element berfungsi */
         background-image: url('{background_url}');
         background-size: cover;
         background-repeat: no-repeat;
         background-attachment: fixed;
         background-position: center;
     }}
+
+    /* Pseudo-element untuk overlay opasitas */
+    [data-testid="stAppViewContainer"]::before, [data-testid="stDecoration"]::before {{
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: {overlay_color}; /* Warna overlay dengan opasitas */
+        z-index: -1; /* Letakkan overlay di belakang konten tapi di atas background image utama */
+                     /* Jika gambar tidak muncul, coba z-index: 1; dan untuk konten stAppViewContainer z-index: 2; */
+    }}
+
+    /* Pastikan konten utama berada di atas overlay jika ada masalah z-index */
+    /* Ini mungkin tidak selalu diperlukan, tergantung struktur Streamlit */
+    /*
+    [data-testid="stAppViewContainer"] > .main {{
+        position: relative;
+        z-index: 1;
+    }}
+    */
 
     /* Styling umum untuk teks agar lebih mudah dibaca */
     body, .stMarkdown, .stTextInput > div > div > input, .stTextArea > div > div > textarea {{
@@ -224,7 +246,8 @@ def set_background_and_style(musim):
         font-weight: bold;
     }}
 
-    /* Tombol - Gunakan data-testid jika memungkinkan */
+    /* ... (Sisa CSS untuk tombol, dropdown, dll. tetap sama) ... */
+
     div[data-testid="stButton"] > button {{
         background-color: {button_color} !important;
         color: white !important;
@@ -236,8 +259,8 @@ def set_background_and_style(musim):
     }}
 
     div[data-testid="stButton"] > button:hover {{
-        background-color: #FFFFFF !important; /* Efek hover: background putih */
-        color: {button_color} !important;      /* Teks jadi warna tombol */
+        background-color: #FFFFFF !important;
+        color: {button_color} !important;
         border: 1px solid {button_color} !important;
         transform: scale(1.03);
     }}
@@ -246,19 +269,17 @@ def set_background_and_style(musim):
         transform: scale(0.98);
     }}
 
-    /* Dropdown (Selectbox) - Gunakan data-testid jika memungkinkan */
     div[data-testid="stSelectbox"] > div {{
         background-color: {dropdown_bg} !important;
         border-radius: 6px !important;
         border: 1px solid {button_color} !important;
     }}
 
-    div[data-testid="stSelectbox"] .st-bq, /* Teks placeholder/label */
-    div[data-testid="stSelectbox"] div[data-baseweb="select"] > div:first-child > div {{ /* Teks nilai yang terpilih */
+    div[data-testid="stSelectbox"] .st-bq,
+    div[data-testid="stSelectbox"] div[data-baseweb="select"] > div:first-child > div {{
         color: {dropdown_text} !important;
     }}
     
-    /* Opsi dropdown saat dibuka */
     div[data-baseweb="popover"] ul li {{
         background-color: {dropdown_bg} !important;
         color: {dropdown_text} !important;
@@ -268,14 +289,12 @@ def set_background_and_style(musim):
         color: white !important;
     }}
 
-    /* Untuk menghilangkan background header default Streamlit jika ada */
     [data-testid="stHeader"] {{
         background-color: rgba(0,0,0,0) !important;
     }}
     </style>
     """
     st.markdown(css, unsafe_allow_html=True)
-
 
 def main():
     st.title("Prediksi Musim di Jawa Timur")
