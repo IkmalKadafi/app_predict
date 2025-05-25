@@ -181,6 +181,50 @@ def detect_seasons(pred_array_rescaled, start_date, days_per_dasarian=10):
     }
     return result
 
+def set_background_and_style(musim):
+    if musim == "Musim Kemarau":
+        # Gambar background untuk kemarau (earth tone)
+        background_url = "Data/bg/kemarau.jpg"
+        button_color = "#A0522D"  # warna earth tone coklat
+        dropdown_color = "#DEB887"
+    else:  # Musim Hujan
+        # Gambar background untuk hujan (biru)
+        background_url = "Data/bg/hujan.jpg"
+        button_color = "#1E90FF"  # warna biru
+        dropdown_color = "#87CEFA"
+
+    css = f"""
+    <style>
+    .stApp {{
+        background: url('{background_url}') no-repeat center center fixed;
+        background-size: cover;
+    }}
+
+    div.stButton > button:first-child {{
+        background-color: {button_color};
+        color: white;
+        font-weight: bold;
+        border-radius: 8px;
+        border: none;
+        padding: 0.5em 1.5em;
+        transition: background-color 0.3s ease;
+    }}
+    div.stButton > button:first-child:hover {{
+        background-color: #33333388; /* Contoh hover sederhana */
+    }}
+
+    div[role="listbox"] > div:first-child {{
+        background-color: {dropdown_color} !important;
+        color: black !important;
+        border-radius: 6px !important;
+        padding: 0.3em 0.5em !important;
+    }}
+    </style>
+    """
+
+    st.markdown(css, unsafe_allow_html=True)
+
+
 def main():
     st.title("Prediksi Musim di Jawa Timur")
     # Inisialisasi state jika belum ada
@@ -189,6 +233,7 @@ def main():
 
     model, data, scaler_x, scaler_y, zona = pilih_topografi()
     musim = pilih_musim()
+    set_background_and_style(musim)
     start_date = pd.to_datetime("2024-10-01")
     look_back = 36
 
