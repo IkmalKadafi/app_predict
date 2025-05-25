@@ -181,6 +181,7 @@ def main():
     look_back = 36
 
     if st.button("Prediksi Musim"):
+        st.session_state["prediksi_ditekan"] = True  # Set status tombol ditekan
         X_all = data[['TAVG', 'FF_AVG']]  # sesuaikan fitur
         X_scaled = scaler_x.transform(X_all)
         X_test_seq = buat_sequence(X_scaled, look_back=look_back)
